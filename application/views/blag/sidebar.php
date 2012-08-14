@@ -2,21 +2,21 @@
 					{usernav}
 					{:endif}
 					<dl>
-						<dt>{@Archive}</dt>
+						<dt><?php echo lang('Archive'); ?></dt>
 						<dd>
 							{archive}
 						</dd>
 					</dl>
 					<hr>
 					<dl>
-						<dt>{@Categories}</dt>
+						<dt><?php echo lang('Categories'); ?></dt>
 						<dd>
 							{categories}
 						</dd>
 					</dl>
 					<hr>
 					<dl>
-						<dt>{@Tags}</dt>
+						<dt><?php echo lang('Tags'); ?></dt>
 						<dd style="text-align:left;">
 							{tags}
 						</dd>

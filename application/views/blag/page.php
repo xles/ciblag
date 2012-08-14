@@ -25,26 +25,26 @@
 					<ul class="pager">
 						{:if prev_url}
 						<li>
-							<a href="(prev_url}">&larr; {@Older}</a>
+							<a href="(prev_url}">&larr; <?php echo lang('Older'); ?></a>
 						</li>
 						{:else}
 						<li class="disabled">
-							<a href="#">&larr; {@Older}</a>
+							<a href="#">&larr; <?php echo lang('Older'); ?></a>
 						</li>
 						{:endif}
 						{:if next_url}
 						<li>
-							<a href="{next_url}">{@Newer} &rarr;</a>
+							<a href="{next_url}"><?php echo lang('Newer'); ?> &rarr;</a>
 						</li>
 						{:else}
 						<li class="disabled">
-							<a href="#">{@Newer} &rarr;</a>
+							<a href="#"><?php echo lang('Newer'); ?> &rarr;</a>
 						</li>
 						{:endif}
 					</ul>
 				</div>
 				<div class="span3">
-					{sidebar}
+					<?php $this->load->view('blag/sidebar'); ?>
 				</div>
 			</div>
 <!-- End component model -->

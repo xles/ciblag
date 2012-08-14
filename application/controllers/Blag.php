@@ -2,31 +2,50 @@
 
 class Blag extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->language('blag');
+		$this->load->helper('language');
+		$this->load->helper('url');
+		$this->load->model('blag_model','model');
+		$this->load->library('auth');
+	}
 	public function index()
 	{
-		
-		$this->load->helper('url');
+		$this->load->view('head');
+		$this->load->view('blag/page');
+		$this->load->view('foot');
+	}
 
-#		$sql = "SELECT * FROM posts;";
-#		$q = $this->db->query($sql);
-#		$data = $q->result_array();
+	public function page()
+	{
+		$this->load->view('head');
+		$this->load->view('blag/page');
+		$this->load->view('foot');
+	}
+
+	public function edit()
+	{
+		$this->load->view('head');
+		$this->load->view('blag/edit');
+		$this->load->view('foot');
+	}
+
+	public function compose()
+	{
 		$this->load->view('head');
 		$this->load->view('blag/compose');
+		$this->load->view('foot');
+	}
+
+	public function post()
+	{
+		$data = $this->model->get_post(1);
+		var_dump($this->auth->login('xles','meracles'));
+		var_dump($this->auth->is_logged_in());
+		$this->load->view('head');
+		$this->load->view('blag/post', $data);
 		$this->load->view('foot');
 	}
 }
