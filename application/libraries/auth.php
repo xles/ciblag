@@ -29,6 +29,22 @@ define('ACCESS_SUPER_USER',	7);
 /**#@-*/
 
 #import('lib.phpass.PasswordHash');
+
+class AuthException extends Exception {
+	public function __construct($e = array())
+	{
+		$msg = '';
+		foreach($e as $str) {
+			$msg .= $str."\n";
+		}
+		parent::__construct($msg);
+	}
+	public function tostring()
+	{
+		return $this->message;
+	}
+}
+
 /**
  * Auth class
  */
@@ -175,13 +191,15 @@ class Auth {
  */
 	public function login($user,$passwd,$save = FALSE)
 	{
-		if(empty($user) || empty($passwd))
-			return $this->CI->lang->line('Empty_fields');
+		if(empty($user) || empty($passwd)) {
+			$error = array($this->CI->lang->line('Empty_fields'));
+			throw new AuthException($error);
+		}
 
 		if(!$this->check_username($user))
 			$error[] = $this->CI->lang->line('Wrong_username');
 
-		$sql = "SELECT user_id, access 
+		$sql = "SELECT user_id, access, passwd 
 			FROM users 
 			WHERE username = ? 
 			LIMIT 1";
@@ -189,7 +207,7 @@ class Auth {
 		$r = $q->row_array();
 
 		if($q->num_rows() == 0)
-			return $error;
+			throw new AuthException($error);
 
 		if($r['access'] == ACCESS_BANNED)
 			$this->logout();
@@ -198,20 +216,22 @@ class Auth {
 		#$this->log->log_var($db,'$db');
 		
 		#if($r['passwd'] != $passwd)
-		if(!$this->check_passwd($passwd))
+		if(!$this->CI->passwordhash->CheckPassword($passwd, $r['passwd']))
 			$error[] = $this->CI->lang->line('Wrong_password');
 		
 		if(isset($error))
-			return $error;
+			throw new AuthException($error);
 			
 		$vars = array(
-			'lastIP' => $_SERVER['REMOTE_ADDR'],
+			'lastip' => $_SERVER['REMOTE_ADDR'],
 			'lastlogin' => date('Y-m-d H:i:s')
 		);
-		$condition = "WHERE user_id = '{$r['user_id']}' LIMIT 1";
-		$login = $this->db->update($vars, $condition);
-
-		if(!is_numeric($login))
+		$this->CI->db->where('user_id', $r['user_id']);
+		$this->CI->db->limit(1);
+		$this->CI->db->update('users',$vars);
+		#var_dump($sql);
+		#$login = $this->CI->db->query($sql);
+		if($this->CI->db->affected_rows() != 1)
 			return $login;
 			
 		$this->CI->session->set_userdata('UID', $r['user_id']);
@@ -228,9 +248,9 @@ class Auth {
 	
 	public function logout()
 	{
-		setcookie('SID', '', -3600);
+		#setcookie('SID', '', -3600);
 		
-		return session_destroy();
+		return $this->CI->session->sess_destroy();
 	}
 	
 	

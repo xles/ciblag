@@ -42,8 +42,13 @@ class Blag extends CI_Controller {
 	public function post()
 	{
 		$data = $this->model->get_post(1);
-		var_dump($this->auth->login('xles','meracles'));
-		var_dump($this->auth->is_logged_in());
+		try {
+			var_dump($this->auth->logout());
+			var_dump($this->auth->login('','bob'));
+			var_dump($this->auth->is_logged_in());
+		} catch(AuthException $e) {
+			var_dump($e->tostring());
+		}
 		$this->load->view('head');
 		$this->load->view('blag/post', $data);
 		$this->load->view('foot');
