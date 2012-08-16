@@ -2,6 +2,13 @@
 
 class User extends CI_controller {
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->language('user');
+		$this->load->model('user_model','model');
+	}
+
 	public function index()
 	{
 
@@ -9,7 +16,9 @@ class User extends CI_controller {
 
 	public function login()
 	{
-
+		$this->load->view('head');
+		$this->load->view('user/login');
+		$this->load->view('foot');
 	}
 
 	public function logout()

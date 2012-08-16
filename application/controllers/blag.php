@@ -6,20 +6,17 @@ class Blag extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->language('blag');
-		$this->load->helper('language');
-		$this->load->helper('url');
-		$this->load->model('blag_model','model');
-		$this->load->library('auth');
+		$this->load->library('pagination');
+		$this->load->model('blag_model', 'model');
 	}
 	public function index()
 	{
-		$this->load->view('head');
-		$this->load->view('blag/page');
-		$this->load->view('foot');
+		$this->page();
 	}
 
 	public function page()
 	{
+		$this->model->list_posts();
 		$this->load->view('head');
 		$this->load->view('blag/page');
 		$this->load->view('foot');
@@ -44,9 +41,9 @@ class Blag extends CI_Controller {
 		$data = $this->model->get_post(1);
 		try {
 			var_dump($this->auth->logout());
-			var_dump($this->auth->login('','bob'));
+			var_dump($this->auth->login('', 'bob'));
 			var_dump($this->auth->is_logged_in());
-		} catch(AuthException $e) {
+		} catch (AuthException $e) {
 			var_dump($e->tostring());
 		}
 		$this->load->view('head');

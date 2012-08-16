@@ -1,8 +1,9 @@
 <!-- Start component model -->
+<?php $posts = array('bob'); ?>
 			<div class="row show-grid">
 				<div class="span9">
-					{:if posts}
-					{:loop posts}
+					<?php if($posts): ?>
+					<?php foreach($posts as $post): ?>
 
 					<div class="row">
 						<div class="span9"> 
@@ -17,31 +18,12 @@
 						</div>
 					</div>
 
-					{:endloop}
-					{:else}
-					BANANAHAMMOCK!
-					{:endif}
+					<?php endforeach; ?>
 					<hr>
-					<ul class="pager">
-						{:if prev_url}
-						<li>
-							<a href="(prev_url}">&larr; <?php echo lang('Older'); ?></a>
-						</li>
-						{:else}
-						<li class="disabled">
-							<a href="#">&larr; <?php echo lang('Older'); ?></a>
-						</li>
-						{:endif}
-						{:if next_url}
-						<li>
-							<a href="{next_url}"><?php echo lang('Newer'); ?> &rarr;</a>
-						</li>
-						{:else}
-						<li class="disabled">
-							<a href="#"><?php echo lang('Newer'); ?> &rarr;</a>
-						</li>
-						{:endif}
-					</ul>
+					<?php echo $this->pagination->create_links(); ?>
+					<?php else: ?>
+					omglol no posts yo
+					<?php endif; ?>
 				</div>
 				<div class="span3">
 					<?php $this->load->view('blag/sidebar'); ?>
